@@ -1,0 +1,66 @@
+---
+title: "Speed of Light"
+author: "Araks Stepanyan"
+date: "10/10/2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Plotting the Speed of Light Using *Morley* data set
+
+**Description**  
+A classical data of Michelson (but not this one with Morley) on measurements done in 1879 on the speed of light. The data consists of five experiments, each consisting of 20 consecutive ‘runs’. The response is the speed of light measurement, suitably coded (km/sec, with 299000 subtracted).  
+...  
+
+**Variables**  
+- Expt (The experiment number, from 1 to 5)  
+- Run (The run number within each experiment)  
+- Speed (Speed-of-light measurement)  
+
+## Quick look at the data
+
+```{r morley_head, echo = TRUE}
+str(morley)
+head(morley, 5)
+```
+
+## Long to wide format
+
+```{r data_dcast, echo = TRUE, message = FALSE}
+library(reshape2)
+dcast.speed <- dcast(morley, Run ~ Expt)
+colnames(dcast.speed)[2:6] <- c("Experiment1", "Experiment2",
+                                "Experiment3", "Experiment4",
+                                "Experiment5")
+head(dcast.speed, 5)
+```
+
+## Plotly R code
+
+```{r plotly_code, echo = TRUE, message = FALSE}
+library(plotly)
+p <- plot_ly(dcast.speed, x = ~Run) %>%
+        add_lines(y = ~Experiment1, name = "Experiment1") %>%
+        add_lines(y = ~Experiment2, name = "Experiment2") %>%
+        add_lines(y = ~Experiment3, name = "Experiment3") %>%
+        add_lines(y = ~Experiment4, name = "Experiment4") %>%
+        add_lines(y = ~Experiment5, name = "Experiment5") %>%
+        layout(
+                title = "Michelson Speed of Light",
+                xaxis = list(title = "Run"),
+                yaxis = list(title = "Speed
+                             km/sec, with 299000 subtracted
+                             ")
+                )
+```
+
+## Speed of Light
+
+```{r pressure}
+p
+```
+
+## Thanks
